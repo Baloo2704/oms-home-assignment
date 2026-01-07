@@ -1,0 +1,7 @@
+pytest
+requests
+pymongo
+pydantic
+pytest-mock
+fastapi
+uvicorn
