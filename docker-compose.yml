@@ -12,7 +12,7 @@ services:
       timeout: 10s
       retries: 5
 
-  # 2. Your Mock API Service
+  # 2. Mock API Service
   oms_app:
     build: 
       context: .
@@ -25,7 +25,7 @@ services:
       mongodb:
         condition: service_healthy
 
-  # 3. The Test Runner
+  # 3. Test Runner
   tests:
     image: python:3.9-slim
     volumes:

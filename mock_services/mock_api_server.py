@@ -16,7 +16,7 @@ client = MongoClient(MONGO_URI)
 db = client["oms_db"]
 orders_collection = db["orders"]
 
-# --- Pydantic Models (Matching Assignment Schema [cite: 27]) ---
+# --- Pydantic Models (Matching Assignment Schema) ---
 class OrderItem(BaseModel):
     product_id: str
     name: str
@@ -35,7 +35,7 @@ class OrderUpdate(BaseModel):
 
 @app.post("/orders", status_code=201)
 def create_order(order: OrderCreate):
-    # Logic: Validate and Store [cite: 16, 17]
+    # Logic: Validate and Store
     order_dict = order.dict()
     order_dict["status"] = "Pending"
     order_dict["created_at"] = datetime.now(timezone.utc)
@@ -48,7 +48,7 @@ def create_order(order: OrderCreate):
 
 @app.get("/orders/{order_id}")
 def get_order(order_id: str):
-    # Logic: Fetch by ID [cite: 46]
+    # Logic: Fetch by ID
     if not ObjectId.is_valid(order_id):
         raise HTTPException(status_code=400, detail="Invalid ID format")
     
@@ -61,7 +61,7 @@ def get_order(order_id: str):
 
 @app.put("/orders/{order_id}")
 def update_status(order_id: str, update: OrderUpdate):
-    # Logic: Update Status (e.g., Pending -> Shipped) [cite: 47]
+    # Logic: Update Status (e.g., Pending -> Shipped)
     if not ObjectId.is_valid(order_id):
         raise HTTPException(status_code=400, detail="Invalid ID format")
 
@@ -82,7 +82,7 @@ def update_status(order_id: str, update: OrderUpdate):
 
 @app.delete("/orders/{order_id}", status_code=204)
 def delete_order(order_id: str):
-    # Logic: Delete Order [cite: 48]
+    # Logic: Delete Order
     if not ObjectId.is_valid(order_id):
         raise HTTPException(status_code=400, detail="Invalid ID format")
         
