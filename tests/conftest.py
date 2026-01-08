@@ -1,13 +1,15 @@
 import pytest
 import logging
+import os
 from pymongo import MongoClient
 from tests.utils.api_client import APIClient
 from tests.utils.data_models import OrderPayload, OrderItem
 
 
 # Configuration
-API_URL = "http://localhost:8000"
-MONGO_URI = "mongodb://localhost:27017"
+# Use the Environment Variable if it exists (Docker), otherwise default to Localhost (Local Run)
+API_URL = os.getenv("API_URL", "http://localhost:8000")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 
 # Logger Fixture
 @pytest.fixture(scope="session")

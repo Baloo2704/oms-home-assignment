@@ -1,0 +1,35 @@
+name: OMS Automated Testing
+
+# Trigger on Push or PR to main/develop branches
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. Checkout the repository code
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # 2. Run the Dockerized Tests
+    # --exit-code-from tests ensures the pipeline fails if tests fail [cite: 72]
+    - name: Run Tests via Docker Compose
+      run: docker-compose up --build --exit-code-from tests
+
+    # 3. Save the Test Report (XML) as an artifact [cite: 67]
+    - name: Upload Test Results
+      if: always() # Run this even if tests fail
+      uses: actions/upload-artifact@v3
+      with:
+        name: pytest-results
+        path: reports/results.xml
+
+    # 4. Clean up containers
+    - name: Teardown
+      if: always()
+      run: docker-compose down

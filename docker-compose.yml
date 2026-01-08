@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # 1. MongoDB Service
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  # 2. Your Mock API Service
+  oms_app:
+    build: 
+      context: .
+      dockerfile: Dockerfile.app
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  # 3. The Test Runner
+  tests:
+    image: python:3.9-slim
+    volumes:
+      - ./:/app
+    working_dir: /app
+    environment:
+      - API_URL=http://oms_app:8000
+      - MONGO_URI=mongodb://mongodb:27017
+    command: >
+      sh -c "pip install -r requirements.txt && 
+             pytest --junitxml=reports/results.xml"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      oms_app:
+        condition: service_started

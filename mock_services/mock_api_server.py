@@ -5,11 +5,14 @@ from pydantic import BaseModel
 from typing import List, Optional
 from bson import ObjectId
 from datetime import datetime, timezone
+import os
+
 
 app = FastAPI()
 
 # Connect to the MongoDB we just started
-client = MongoClient("mongodb://localhost:27017")
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+client = MongoClient(MONGO_URI)
 db = client["oms_db"]
 orders_collection = db["orders"]
 
