@@ -1,7 +1,7 @@
 ```markdown
 # OMS QA Automation Assignment
 
-![Build Status](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/test.yml/badge.svg)
+![Build Status](https://github.com/Baloo2704/oms-home-assignment/actions/workflows/test.yml/badge.svg)
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED)
 
@@ -37,8 +37,8 @@ Before running the project, ensure you have the following installed:
 
 ### Step 1: Clone and Enter
 ```bash
-git clone [https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git)
-cd oms_qa_assignment
+git clone https://github.com/Baloo2704/oms-home-assignment.git
+cd oms_home_assignment
 
 ```
 
@@ -136,7 +136,3 @@ oms_qa_assignment/
 
 **Author:** Dani Finkelstein
 **Submission Date:** January 2026
-
-```
-
-```
