@@ -19,7 +19,7 @@ jobs:
     # 2. Run the Dockerized Tests
     # --exit-code-from tests ensures the pipeline fails if tests fail [cite: 72]
     - name: Run Tests via Docker Compose
-      run: docker-compose up --build --exit-code-from tests
+      run: docker compose up --build --exit-code-from tests
 
     # 3. Save the Test Report (XML) as an artifact [cite: 67]
     - name: Upload Test Results
@@ -32,4 +32,4 @@ jobs:
     # 4. Clean up containers
     - name: Teardown
       if: always()
-      run: docker-compose down
+      run: docker compose down
