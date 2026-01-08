@@ -1,35 +1,55 @@
-name: OMS Automated Testing
+name: OMS Automated Testing & Release
 
-# Trigger on Push or PR to main/develop branches
 on:
   push:
     branches: [ "main", "develop" ]
   pull_request:
     branches: [ "main", "develop" ]
 
+permissions:
+  contents: write
+
 jobs:
+  # JOB 1: RUN TESTS
   integration-tests:
     runs-on: ubuntu-latest
-    
     steps:
-    # 1. Checkout the repository code
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # 2. Run the Dockerized Tests
-    # --exit-code-from tests ensures the pipeline fails if tests fail
     - name: Run Tests via Docker Compose
       run: docker compose up --build --exit-code-from tests
 
-    # 3. Save the Test Report (XML) as an artifact
     - name: Upload Test Results
-      if: always() # Run this even if tests fail
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: pytest-results
         path: reports/results.xml
+        overwrite: true
 
-    # 4. Clean up containers
     - name: Teardown
       if: always()
       run: docker compose down
+
+  # JOB 2: DEPLOY & TAG (Runs ONLY if tests pass)
+  deploy-and-tag:
+    needs: integration-tests  # <--- THE GATE
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && success()  # Only on 'main' branch
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: '0'
+
+    - name: Automated Git Tagging
+      uses: anothrNick/github-tag-action@1.67.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+        DEFAULT_BUMP: patch
+    
+    - name: Simulate Deployment
+      run: echo "Tests passed. Tag created. Deploying..."
