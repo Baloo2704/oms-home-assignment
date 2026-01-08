@@ -14,7 +14,7 @@ jobs:
     steps:
     # 1. Checkout the repository code
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # 2. Run the Dockerized Tests
     # --exit-code-from tests ensures the pipeline fails if tests fail [cite: 72]
@@ -24,7 +24,7 @@ jobs:
     # 3. Save the Test Report (XML) as an artifact [cite: 67]
     - name: Upload Test Results
       if: always() # Run this even if tests fail
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: pytest-results
         path: reports/results.xml
