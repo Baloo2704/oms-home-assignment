@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from pydantic import BaseModel
 from typing import List, Optional
 from bson import ObjectId
-from datetime import datetime
+from datetime import datetime, timezone
 
 app = FastAPI()
 
@@ -35,7 +35,7 @@ def create_order(order: OrderCreate):
     # Logic: Validate and Store [cite: 16, 17]
     order_dict = order.dict()
     order_dict["status"] = "Pending"
-    order_dict["created_at"] = datetime.utcnow()
+    order_dict["created_at"] = datetime.now(timezone.utc)
     
     new_order = orders_collection.insert_one(order_dict)
     
@@ -62,9 +62,14 @@ def update_status(order_id: str, update: OrderUpdate):
     if not ObjectId.is_valid(order_id):
         raise HTTPException(status_code=400, detail="Invalid ID format")
 
+    updated_data = {
+        "status": update.status,
+        "updated_at": datetime.now(timezone.utc)
+    }
+
     result = orders_collection.update_one(
         {"_id": ObjectId(order_id)},
-        {"$set": {"status": update.status}}
+        {"$set": updated_data}
     )
     
     if result.matched_count == 0:
