@@ -36,7 +36,7 @@ class OrderUpdate(BaseModel):
 @app.post("/orders", status_code=201)
 def create_order(order: OrderCreate):
     # Logic: Validate and Store
-    order_dict = order.dict()
+    order_dict = order.model_dump()
     order_dict["status"] = "Pending"
     order_dict["created_at"] = datetime.now(timezone.utc)
     

@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, Field
+from typing import List, Optional
 from datetime import datetime
 
 class OrderItem(BaseModel):
@@ -13,4 +13,5 @@ class OrderPayload(BaseModel):
     items: List[OrderItem]
     total_price: float
     status: str = "Pending"
-    created_at: datetime = datetime.now()
+    created_at: datetime = Field(default_factory=datetime.now)
+    updated_at: Optional[datetime] = None
